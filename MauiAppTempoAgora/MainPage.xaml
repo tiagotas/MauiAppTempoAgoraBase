@@ -3,11 +3,17 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="MauiAppTempoAgora.MainPage">
 
-    <StackLayout>
+    <StackLayout Spacing="10" Margin="10">
 
         <Button Text="Obter Localização" Clicked="Button_Clicked" />
 
-        <Label x:Name="lbl_localizacao" Text="Dados de Latitude e Longitude" />
+        <Label Text="Latitude:" />
+        <Entry x:Name="lbl_latitude" />
+
+        <Label Text="Longitude:" />
+        <Entry x:Name="lbl_longitude" />
+
+        <Button Text="Obter Placemark" Clicked="Button_Clicked_1" />
 
         <Label x:Name="lbl_reverso" Text="Dados gerais de Local" />
 

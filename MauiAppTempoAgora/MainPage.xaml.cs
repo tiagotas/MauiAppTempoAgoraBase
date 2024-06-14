@@ -1,13 +1,14 @@
 ﻿using Microsoft.Maui.Devices.Sensors;
 using System;
+using System.Diagnostics;
 using static System.Net.Mime.MediaTypeNames;
 
 namespace MauiAppTempoAgora
 {
     public partial class MainPage : ContentPage
     {
-        private CancellationTokenSource _cancelTokenSource;
-        private bool _isCheckingLocation;
+        CancellationTokenSource _cancelTokenSource;
+        bool _isCheckingLocation;
 
         public MainPage()
         {
@@ -17,35 +18,36 @@ namespace MauiAppTempoAgora
         // https://learn.microsoft.com/en-us/bingmaps/getting-started/bing-maps-dev-center-help/getting-a-bing-maps-key
         // https://stackoverflow.com/questions/75174113/maui-windows-platform-cant-access-location
 
-        public async Task<string> GetCachedLocation()
+
+        private async void Button_Clicked(object sender, EventArgs e)
         {
-            Platform.MapServiceToken = "Ak76gvzfN2uHruYAG8pNyE_2ipU9lV5MaN0YQ0k9WP8b8kRaKWpp4hr4ZFJaA1E4";
-
-            //await DisplayAlert("Token de Mapas:", Platform.MapServiceToken, "OK");
-
             try
             {
+                _cancelTokenSource = new CancellationTokenSource();
 
                 GeolocationRequest request = new GeolocationRequest(GeolocationAccuracy.Medium, TimeSpan.FromSeconds(10));
 
-                _cancelTokenSource = new CancellationTokenSource();
+                Location? location = await Geolocation.Default.GetLocationAsync(request, _cancelTokenSource.Token);
 
-                Location location = await Geolocation.Default.GetLocationAsync(request, _cancelTokenSource.Token);
-
-                string reverso = await GetGeocodeReverseData(location.Latitude, location.Longitude);
-
-                lbl_reverso.Text = reverso;
-                await DisplayAlert("Reverso", reverso, "OK");
-
-
-
-                Console.WriteLine("-------------------------------------------");
-                Console.WriteLine(location);
-                Console.WriteLine(reverso);
-                Console.WriteLine("-------------------------------------------");
 
                 if (location != null)
-                    return $"Latitude: {location.Latitude}, Longitude: {location.Longitude}, Altitude: {location.Altitude}";
+                {
+                    //string reverso = await GetGeocodeReverseData(location.Latitude, location.Longitude);
+
+                    lbl_latitude.Text = location.Latitude.ToString();
+                    lbl_longitude.Text = location.Longitude.ToString();
+
+
+                    //lbl_localizacao.Text = $"Latitude: {location.Latitude}, Longitude: {location.Longitude}, Altitude: {location.Altitude}";
+                    //lbl_reverso.Text = reverso;
+                    //await DisplayAlert("Reverso", reverso, "OK");
+
+                    Debug.WriteLine("-------------------------------------------");
+                    Debug.WriteLine(location);
+                    //Debug.WriteLine(reverso);
+                    Debug.WriteLine("-------------------------------------------");
+                }
+
             }
             catch (FeatureNotSupportedException fnsEx)
             {
@@ -68,24 +70,17 @@ namespace MauiAppTempoAgora
                 // Unable to get location
                 await DisplayAlert("Erro: ", ex.Message, "OK");
             }
-
-            return "None";
-        }
-
-        private async void Button_Clicked(object sender, EventArgs e)
-        {
-            string teste = await GetCachedLocation();            
-
-            lbl_localizacao.Text = teste;            
         }
 
         private async Task<string> GetGeocodeReverseData(double latitude = 47.673988, double longitude = -122.121513)
         {
             IEnumerable<Placemark> placemarks = await Geocoding.Default.GetPlacemarksAsync(latitude, longitude);
 
-            
-
             Placemark placemark = placemarks?.FirstOrDefault();
+
+            Debug.WriteLine("-------------------------------------------");
+            Debug.WriteLine(placemarks.Count());
+            Debug.WriteLine("-------------------------------------------");
 
             if (placemark != null)
             {
@@ -103,7 +98,17 @@ namespace MauiAppTempoAgora
 
             }
 
-            return "";
+            return "Nada";
+        }
+
+        private async void Button_Clicked_1(object sender, EventArgs e)
+        {
+            // lat = longitude = 37.421998333333335
+            //long = -122.084
+            double latitude = Convert.ToDouble(lbl_latitude.Text);
+            double longitude = Convert.ToDouble(lbl_longitude.Text);
+
+            lbl_reverso.Text = await GetGeocodeReverseData(latitude, longitude);
         }
     }
 
