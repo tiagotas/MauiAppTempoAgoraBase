@@ -15,6 +15,8 @@ namespace MauiAppTempoAgora.Models
         public string? Visibility { get; set; }
         public string? Sunrise { get; set; }
         public string? Sunset { get; set; }
+        public string? Weather {  get; set; } 
+        public string? WeatherDescription {  get; set; }
 
     }
 }

@@ -18,7 +18,7 @@ namespace MauiAppTempoAgora.WinUI
         {
             this.InitializeComponent();
 
-            Platform.MapServiceToken = "Ak76gvzfN2uHruYAG8pNyE_2ipU9lV5MaN0YQ0k9WP8b8kRaKWpp4hr4ZFJaA1E4";
+            Platform.MapServiceToken = "z55QeeUbRf6mRhiZDgcP~KpONY3zL1wHlGBeb590zGg~Aky4ub2z4AnvS2RMdaU2VoYIfuWnoDGtOoUfgAi9CngN5iWe3Cps0cGqUdAnBVXT";
         }
 
         protected override MauiApp CreateMauiApp() => MauiProgram.CreateMauiApp();

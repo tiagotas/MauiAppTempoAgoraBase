@@ -1,5 +1,7 @@
 ﻿using MauiAppTempoAgora.Models;
-using System.Text.Json;
+using System.Diagnostics;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace MauiAppTempoAgora.Service
 {
@@ -7,11 +9,14 @@ namespace MauiAppTempoAgora.Service
     {
         public static async Task<Tempo?> GetPrevisaoDoTempo(string cidade)
         {
-            string appId = "3a1c2788d3f9ad95494df4258594b553";
+            // https://openweathermap.org/current#current_JSON
+
+            // https://home.openweathermap.org/api_keys
+            string appId = "6135072afe7f6cec1537d5cb08a5a1a2";
 
             string url = $"http://api.openweathermap.org/data/2.5/weather?q={cidade}&units=metric&appid={appId}";
 
-            Tempo? tempo = null;
+            Tempo tempo = null;
 
             using (HttpClient client = new HttpClient())
             {
@@ -21,7 +26,38 @@ namespace MauiAppTempoAgora.Service
                 {
                     string json = response.Content.ReadAsStringAsync().Result;
 
-                    tempo = JsonSerializer.Deserialize<Tempo>(json);                    
+                    Debug.WriteLine("--------------------------------------------------------------------");
+                    Debug.WriteLine(json);
+                    Debug.WriteLine("--------------------------------------------------------------------");
+
+                    //var rascunho = JsonConvert.DeserializeObject(json);
+                    var rascunho = JObject.Parse(json);
+
+                    Debug.WriteLine("--------------------------------------------------------------------");
+                    Debug.WriteLine(rascunho);
+                    Debug.WriteLine("--------------------------------------------------------------------");
+
+                    DateTime time = new DateTime(1970, 1, 1, 0, 0, 0, 0);
+                    DateTime sunrise = time.AddSeconds((double)rascunho["sys"]["sunrise"]).ToLocalTime();
+                    DateTime sunset = time.AddSeconds((double)rascunho["sys"]["sunset"]).ToLocalTime();
+
+                    // Ajustar de UTC para GMT
+                    // https://stackoverflow.com/questions/6239976/how-to-set-a-time-zone-or-a-kind-of-a-datetime-value
+
+                    tempo = new ()
+                    {
+                        Humidity = (string)rascunho["main"]["humidity"],
+                        Temperature = (string)rascunho["main"]["temp"],
+                        Title = (string)rascunho["name"],
+                        Visibility = (string)rascunho["visibility"],
+                        Wind = (string)rascunho["wind"]["speed"],
+                        Sunrise = sunrise.ToString(),
+                        Sunset = sunset.ToString(),
+                        Weather = (string)rascunho["weather"][0]["main"],
+                        WeatherDescription = (string)rascunho["weather"][0]["description"],
+                    };
+
+                    //tempo = JsonConvert.DeserializeObject<Tempo>(json);                    
                 }
             }
 
