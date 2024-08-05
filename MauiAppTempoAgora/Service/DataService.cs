@@ -14,7 +14,8 @@ namespace MauiAppTempoAgora.Service
             // https://home.openweathermap.org/api_keys
             string appId = "6135072afe7f6cec1537d5cb08a5a1a2";
 
-            string url = $"http://api.openweathermap.org/data/2.5/weather?q={cidade}&units=metric&appid={appId}";
+            string url = $"http://api.openweathermap.org/data/2.5/weather?" +
+                         $"q={cidade}&units=metric&appid={appId}";
 
             Tempo tempo = null;
 
@@ -26,16 +27,16 @@ namespace MauiAppTempoAgora.Service
                 {
                     string json = response.Content.ReadAsStringAsync().Result;
 
-                    Debug.WriteLine("--------------------------------------------------------------------");
+                    Debug.WriteLine("----------------------------");
                     Debug.WriteLine(json);
-                    Debug.WriteLine("--------------------------------------------------------------------");
+                    Debug.WriteLine("----------------------------");
 
                     //var rascunho = JsonConvert.DeserializeObject(json);
                     var rascunho = JObject.Parse(json);
 
-                    Debug.WriteLine("--------------------------------------------------------------------");
+                    Debug.WriteLine("------------------------------------");
                     Debug.WriteLine(rascunho);
-                    Debug.WriteLine("--------------------------------------------------------------------");
+                    Debug.WriteLine("------------------------------------");
 
                     DateTime time = new DateTime(1970, 1, 1, 0, 0, 0, 0);
                     DateTime sunrise = time.AddSeconds((double)rascunho["sys"]["sunrise"]).ToLocalTime();
@@ -55,13 +56,11 @@ namespace MauiAppTempoAgora.Service
                         Sunset = sunset.ToString(),
                         Weather = (string)rascunho["weather"][0]["main"],
                         WeatherDescription = (string)rascunho["weather"][0]["description"],
-                    };
-
-                    //tempo = JsonConvert.DeserializeObject<Tempo>(json);                    
-                }
-            }
+                    };                  
+                } // Fecha if
+            } // Fecha using
 
             return tempo;
-        }
+        } // Fecha método
     }
 }

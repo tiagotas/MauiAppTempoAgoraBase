@@ -26,58 +26,52 @@ namespace MauiAppTempoAgora
             {
                 _cancelTokenSource = new CancellationTokenSource();
 
-                GeolocationRequest request = new GeolocationRequest(GeolocationAccuracy.Medium, TimeSpan.FromSeconds(10));
+                GeolocationRequest request = 
+                    new GeolocationRequest(GeolocationAccuracy.Medium, 
+                    TimeSpan.FromSeconds(10));
 
-                Location? location = await Geolocation.Default.GetLocationAsync(request, _cancelTokenSource.Token);
+                Location? location = await Geolocation.Default.GetLocationAsync(
+                    request, _cancelTokenSource.Token);
 
 
                 if (location != null)
                 {
-                    //string reverso = await GetGeocodeReverseData(location.Latitude, location.Longitude);
-
                     lbl_latitude.Text = location.Latitude.ToString();
                     lbl_longitude.Text = location.Longitude.ToString();
+                    
 
-
-                    //lbl_localizacao.Text = $"Latitude: {location.Latitude}, Longitude: {location.Longitude}, Altitude: {location.Altitude}";
-                    //lbl_reverso.Text = reverso;
-                    //await DisplayAlert("Reverso", reverso, "OK");
-
-                    Debug.WriteLine("-------------------------------------------");
-                    Debug.WriteLine(location);
-                    //Debug.WriteLine(reverso);
-                    Debug.WriteLine("-------------------------------------------");
+                    Debug.WriteLine("---------------------------------------");
+                    Debug.WriteLine(location);                    
+                    Debug.WriteLine("---------------------------------------");
                 }
 
             }
             catch (FeatureNotSupportedException fnsEx)
-            {
-                // Handle not supported on device exception
-                await DisplayAlert("Erro: Dispositivo não Suporta", fnsEx.Message, "OK");
-
+            {               
+                await DisplayAlert("Erro: Dispositivo não Suporta", 
+                    fnsEx.Message, "OK");
             }
             catch (FeatureNotEnabledException fneEx)
-            {
-                // Handle not enabled on device exception
-                await DisplayAlert("Erro: Localização Desabilitada", fneEx.Message, "OK");
+            {                
+                await DisplayAlert("Erro: Localização Desabilitada", 
+                    fneEx.Message, "OK");
             }
             catch (PermissionException pEx)
-            {
-                // Handle permission exception
+            {                
                 await DisplayAlert("Erro: Permissão", pEx.Message, "OK");
             }
             catch (Exception ex)
-            {
-                // Unable to get location
+            {                
                 await DisplayAlert("Erro: ", ex.Message, "OK");
             }
-        }
+        } // Fecha método
 
-        private async Task<string> GetGeocodeReverseData(double latitude = 47.673988, double longitude = -122.121513)
+        private async Task<string> GetGeocodeReverseData(
+            double latitude = 47.673988, double longitude = -122.121513)
         {
-            //await DisplayAlert("Dados", $"Latitude: {latitude} Longitude: {longitude}", "OK");
-
-            IEnumerable<Placemark> placemarks = await Geocoding.Default.GetPlacemarksAsync(latitude, longitude);
+            IEnumerable<Placemark> placemarks = 
+                await Geocoding.Default.GetPlacemarksAsync(
+                    latitude, longitude);
 
             Placemark? placemark = placemarks?.FirstOrDefault();
 
