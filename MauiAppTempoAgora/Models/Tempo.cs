@@ -18,5 +18,8 @@ namespace MauiAppTempoAgora.Models
         public string? Weather {  get; set; } 
         public string? WeatherDescription {  get; set; }
 
+        public string? Latitude { get; set; }
+        public string? Longitude { get; set; }
+
     }
 }

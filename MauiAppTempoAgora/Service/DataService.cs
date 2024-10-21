@@ -56,6 +56,8 @@ namespace MauiAppTempoAgora.Service
                         Sunset = sunset.ToString(),
                         Weather = (string)rascunho["weather"][0]["main"],
                         WeatherDescription = (string)rascunho["weather"][0]["description"],
+                        Latitude = (string)rascunho["coord"]["lat"],
+                        Longitude = (string)rascunho["coord"]["lon"],
                     };                  
                 } // Fecha if
             } // Fecha using

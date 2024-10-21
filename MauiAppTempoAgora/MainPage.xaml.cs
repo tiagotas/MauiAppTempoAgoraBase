@@ -129,8 +129,21 @@ namespace MauiAppTempoAgora
                                          $"Visibilidade: {previsao.Visibility} \n" +
                                          $"Vento: {previsao.Wind} \n" +
                                          $"Previsão: {previsao.Weather} \n" +
-                                         $"Descrição: {previsao.WeatherDescription}";
-                                        
+                                         $"Descrição: {previsao.WeatherDescription} \n" +
+                                         $"Latitude: {previsao.Latitude} \n" +
+                                         $"Longitude: {previsao.Longitude}";
+
+
+
+                        string url_mapa = $"https://embed.windy.com/embed.html" +
+                                           $"?type=map&location=coordinates&metricRain=mm" +
+                                           $"&metricTemp=°C&metricWind=km/h&zoom=5&overlay=wind" +
+                                           $"&product=ecmwf&level=surface" +
+                                           $"&lat={previsao.Latitude}&lon={previsao.Longitude}";
+
+
+                        Debug.WriteLine(url_mapa);
+                        mapa.Source = url_mapa;                                        
                     }
                     else
                     {
